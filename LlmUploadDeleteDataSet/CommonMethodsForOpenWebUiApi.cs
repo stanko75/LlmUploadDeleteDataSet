@@ -7,8 +7,9 @@ namespace LlmUploadDeleteDataSet;
 
 public static class CommonMethodsForOpenWebUiApi
 {
-    public static async Task DeleteAllFiles(string baseUrl, string apiKey)
+    public static async Task DeleteAllFiles(string baseUrl, string apiKey, TextBox tbLog)
     {
+        tbLog.Clear();
         CancellationToken ct = CancellationToken.None;
         baseUrl = baseUrl.TrimEnd('/');
 
@@ -25,12 +26,14 @@ public static class CommonMethodsForOpenWebUiApi
             {
                 var delUrl = $"{baseUrl}/api/v1/files/{Uri.EscapeDataString(fileId)}";
                 var resp = await http.DeleteAsync(delUrl, ct);
+                tbLog.AppendText($"{fileId}: {resp.IsSuccessStatusCode} {Environment.NewLine}");
             }
         }
     }
 
-    public static async Task AddAllFilesFromPath(string baseUrl, string apiKey, string filePath)
+    public static async Task AddAllFilesFromPath(string baseUrl, string apiKey, string filePath, TextBox tbLog)
     {
+        tbLog.Clear();
         var handler = new HttpClientHandler { AllowAutoRedirect = false };
         using var http = new HttpClient(handler);
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
@@ -42,6 +45,7 @@ public static class CommonMethodsForOpenWebUiApi
             var fileId = await UploadFile(baseUrl, http, llmFile);
             var knowledgeId = await CreateKnowledgeBase(baseUrl, apiKey, llmFile, llmFile);
             await AddFileToKnowledge(baseUrl, http, knowledgeId, fileId);
+            tbLog.AppendText($"{fileId}{Environment.NewLine}");
         }
     }
 

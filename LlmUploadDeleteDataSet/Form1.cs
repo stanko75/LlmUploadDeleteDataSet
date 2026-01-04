@@ -41,11 +41,11 @@ public partial class Form1 : Form
 
     private async void btnDeleteAllFiles_Click(object sender, EventArgs e)
     {
-        await CommonMethodsForOpenWebUiApi.DeleteAllFiles(tbBaseUrl.Text, tbApiKey.Text);
+        await CommonMethodsForOpenWebUiApi.DeleteAllFiles(tbBaseUrl.Text, tbApiKey.Text, tbLog);
     }
 
     private async void btnAddFiles_Click(object sender, EventArgs e)
     {
-        await CommonMethodsForOpenWebUiApi.AddAllFilesFromPath(tbBaseUrl.Text, tbApiKey.Text, tbFilePath.Text);
+        await CommonMethodsForOpenWebUiApi.AddAllFilesFromPath(tbBaseUrl.Text, tbApiKey.Text, tbFilePath.Text, tbLog);
     }
 }
