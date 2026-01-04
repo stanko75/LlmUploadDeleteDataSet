@@ -51,6 +51,119 @@ public static class CommonMethodsForOpenWebUiApi
         tbLog.AppendText($"Done AddAllFilesFromPath {Environment.NewLine}");
     }
 
+    /// <summary>
+    /// Creates ONE knowledge base (collection) and adds ALL files from the folder to it.
+    /// Returns the created knowledgeId.
+    /// </summary>
+    public static async Task<string> AddAllFilesFromPath(
+        string baseUrl,
+        string apiKey,
+        string folderPath,
+        string knowledgeName,
+        string knowledgeDescription,
+        TextBox tbLog,
+        CancellationToken ct = default)
+    {
+        tbLog.Clear();
+        baseUrl = baseUrl.TrimEnd('/');
+
+        // One shared HttpClient for all calls
+        var handler = new HttpClientHandler { AllowAutoRedirect = false };
+        using var http = new HttpClient(handler);
+        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+        // 1) Create ONE knowledge base for the whole folder
+        var knowledgeId = await CreateKnowledgeBase(baseUrl, http, knowledgeName, knowledgeDescription, ct);
+        tbLog.AppendText($"Knowledge created: {knowledgeId}{Environment.NewLine}");
+
+        // 2) Upload and add every file into that knowledge base
+        var files = Directory.GetFiles(folderPath);
+        foreach (var file in files)
+        {
+            try
+            {
+                var fileId = await UploadFile(baseUrl, http, file, ct);
+                await AddFileToKnowledge(baseUrl, http, knowledgeId, fileId, ct);
+
+                tbLog.AppendText($"OK  file={Path.GetFileName(file)}  fileId={fileId}{Environment.NewLine}");
+            }
+            catch (Exception ex)
+            {
+                tbLog.AppendText($"ERR file={Path.GetFileName(file)}  {ex.Message}{Environment.NewLine}");
+            }
+        }
+
+        tbLog.AppendText($"Done AddAllFilesFromPath. knowledgeId={knowledgeId}{Environment.NewLine}");
+        return knowledgeId;
+    }
+
+    private static async Task AddFileToKnowledge(
+        string baseUrl,
+        HttpClient http,
+        string knowledgeId,
+        string fileId,
+        CancellationToken ct)
+    {
+        baseUrl = baseUrl.TrimEnd('/');
+
+        var payload = JsonSerializer.Serialize(new { file_id = fileId });
+        using var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+        using var resp = await http.PostAsync($"{baseUrl}/api/v1/knowledge/{knowledgeId}/file/add", content, ct);
+        resp.EnsureSuccessStatusCode();
+    }
+
+    private static async Task<string> UploadFile(
+        string baseUrl,
+        HttpClient http,
+        string filePath,
+        CancellationToken ct)
+    {
+        baseUrl = baseUrl.TrimEnd('/');
+
+        using var form = new MultipartFormDataContent();
+        await using var fs = File.OpenRead(filePath);
+
+        var fileContent = new StreamContent(fs);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        form.Add(fileContent, "file", Path.GetFileName(filePath));
+
+        using var resp = await http.PostAsync($"{baseUrl}/api/v1/files/", form, ct);
+        resp.EnsureSuccessStatusCode();
+
+        var json = await resp.Content.ReadAsStringAsync(ct);
+
+        using var doc = JsonDocument.Parse(json);
+        var id = doc.RootElement.GetProperty("id").GetString();
+
+        if (string.IsNullOrWhiteSpace(id))
+            throw new Exception("Upload succeeded but no file id returned.");
+
+        return id;
+    }
+
+    private static async Task<string> CreateKnowledgeBase(
+        string baseUrl,
+        HttpClient http,
+        string name,
+        string description,
+        CancellationToken ct)
+    {
+        baseUrl = baseUrl.TrimEnd('/');
+
+        var payload = JsonSerializer.Serialize(new { name, description });
+        using var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+        using var resp = await http.PostAsync($"{baseUrl}/api/v1/knowledge/create", content, ct);
+        var body = await resp.Content.ReadAsStringAsync(ct);
+
+        resp.EnsureSuccessStatusCode();
+
+        using var doc = JsonDocument.Parse(body);
+        return doc.RootElement.GetProperty("id").GetString()
+               ?? throw new Exception("Create succeeded but no 'id' returned.");
+    }
+
     static async Task<string> CreateKnowledgeBase(string baseUrl, string apiKey, string name, string description)
     {
         using var http = new HttpClient();

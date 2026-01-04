@@ -46,6 +46,12 @@ public partial class Form1 : Form
 
     private async void btnAddFiles_Click(object sender, EventArgs e)
     {
-        await CommonMethodsForOpenWebUiApi.AddAllFilesFromPath(tbBaseUrl.Text, tbApiKey.Text, tbFilePath.Text, tbLog);
+        //await CommonMethodsForOpenWebUiApi.AddAllFilesFromPath(tbBaseUrl.Text, tbApiKey.Text, tbFilePath.Text, tbLog);
+        await CommonMethodsForOpenWebUiApi.AddAllFilesFromPath(tbBaseUrl.Text
+            , tbApiKey.Text
+            , tbFilePath.Text
+            , "TEST"
+            , "test"
+            , tbLog);
     }
 }
