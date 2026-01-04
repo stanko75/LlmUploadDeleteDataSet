@@ -29,6 +29,7 @@ public static class CommonMethodsForOpenWebUiApi
                 tbLog.AppendText($"{fileId}: {resp.IsSuccessStatusCode} {Environment.NewLine}");
             }
         }
+        tbLog.AppendText($"Done DeleteAllFiles {Environment.NewLine}");
     }
 
     public static async Task AddAllFilesFromPath(string baseUrl, string apiKey, string filePath, TextBox tbLog)
@@ -47,6 +48,7 @@ public static class CommonMethodsForOpenWebUiApi
             await AddFileToKnowledge(baseUrl, http, knowledgeId, fileId);
             tbLog.AppendText($"{fileId}{Environment.NewLine}");
         }
+        tbLog.AppendText($"Done AddAllFilesFromPath {Environment.NewLine}");
     }
 
     static async Task<string> CreateKnowledgeBase(string baseUrl, string apiKey, string name, string description)
