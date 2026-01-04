@@ -128,10 +128,10 @@
             // tbLog
             // 
             tbLog.Dock = DockStyle.Fill;
-            tbLog.Location = new Point(0, 60);
+            tbLog.Location = new Point(0, 90);
             tbLog.Multiline = true;
             tbLog.Name = "tbLog";
-            tbLog.Size = new Size(800, 344);
+            tbLog.Size = new Size(800, 314);
             tbLog.TabIndex = 6;
             // 
             // panel3
@@ -168,8 +168,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(panel3);
             Controls.Add(tbLog);
+            Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(btnAddFiles);
