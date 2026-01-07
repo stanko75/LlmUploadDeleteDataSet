@@ -131,6 +131,7 @@
             tbLog.Location = new Point(0, 90);
             tbLog.Multiline = true;
             tbLog.Name = "tbLog";
+            tbLog.ScrollBars = ScrollBars.Both;
             tbLog.Size = new Size(800, 314);
             tbLog.TabIndex = 6;
             // 
