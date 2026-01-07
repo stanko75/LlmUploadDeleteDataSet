@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace LlmUploadDeleteDataSet;
 
@@ -78,14 +79,19 @@ public static class CommonMethodsForOpenWebUiApi
 
         // 2) Upload and add every file into that knowledge base
         var files = Directory.GetFiles(folderPath);
+        var listOfAddedFiles = new List<string>();
         foreach (var file in files)
         {
+            if (!CheckIfSameFileAlreadyAdded(listOfAddedFiles, file)) continue;
+
             try
             {
                 var fileId = await UploadFile(baseUrl, http, file, ct);
                 await AddFileToKnowledge(baseUrl, http, knowledgeId, fileId, ct);
 
                 tbLog.AppendText($"OK  file={Path.GetFileName(file)}  fileId={fileId}{Environment.NewLine}");
+                listOfAddedFiles.Add(file);
+
             }
             catch (Exception ex)
             {
@@ -95,6 +101,22 @@ public static class CommonMethodsForOpenWebUiApi
 
         tbLog.AppendText($"Done AddAllFilesFromPath. knowledgeId={knowledgeId}{Environment.NewLine}");
         return knowledgeId;
+    }
+
+    private static bool CheckIfSameFileAlreadyAdded(List<string> listOfAddedFiles, string originalFile)
+    {
+        return listOfAddedFiles.Any() && listOfAddedFiles.Any(addedFile => CompareTxtFiles(addedFile, originalFile));
+    }
+
+    static bool CompareTxtFiles(string file1, string file2)
+    {
+        string text1 = File.ReadAllText(file1);
+        string text2 = File.ReadAllText(file2);
+
+        text1 = Regex.Replace(text1, @"\s+", "");
+        text2 = Regex.Replace(text2, @"\s+", "");
+
+        return string.Equals(text1, text2, StringComparison.OrdinalIgnoreCase);
     }
 
     private static async Task AddFileToKnowledge(
