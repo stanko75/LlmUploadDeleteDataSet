@@ -25,6 +25,12 @@ public partial class Form1 : Form
 
             string? baseUrlValue = configuration.GetSection("baseUrl").Value;
             if (baseUrlValue is not null) tbBaseUrl.Text = baseUrlValue;
+
+            string? knowledgeNameValue = configuration.GetSection("knowledgeName").Value;
+            if (knowledgeNameValue is not null) tbKnowledgeName.Text = knowledgeNameValue;
+
+            string? knowledgeDescriptionValue = configuration.GetSection("knowledgeDescription").Value;
+            if (knowledgeDescriptionValue is not null) tbKnowledgeDescription.Text = knowledgeDescriptionValue;
         }
     }
 
@@ -34,7 +40,9 @@ public partial class Form1 : Form
         {
             ["apiKey"] = tbApiKey.Text,
             ["filePath"] = tbFilePath.Text,
-            ["baseUrl"] = tbBaseUrl.Text
+            ["baseUrl"] = tbBaseUrl.Text,
+            ["knowledgeName"] = tbKnowledgeName.Text,
+            ["knowledgeDescription"] = tbKnowledgeDescription.Text
         };
         File.WriteAllText(JsonConfig, jsonConfig.ToString());
     }
@@ -50,8 +58,8 @@ public partial class Form1 : Form
         await CommonMethodsForOpenWebUiApi.AddAllFilesFromPath(tbBaseUrl.Text
             , tbApiKey.Text
             , tbFilePath.Text
-            , "TEST"
-            , "test"
+            , tbKnowledgeName.Text
+            , tbKnowledgeDescription.Text
             , tbLog);
     }
 }

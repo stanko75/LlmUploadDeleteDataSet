@@ -40,9 +40,17 @@
             panel3 = new Panel();
             tbBaseUrl = new TextBox();
             label3 = new Label();
+            panel4 = new Panel();
+            tbKnowledgeName = new TextBox();
+            label4 = new Label();
+            panel5 = new Panel();
+            tbKnowledgeDescription = new TextBox();
+            label5 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
+            panel4.SuspendLayout();
+            panel5.SuspendLayout();
             SuspendLayout();
             // 
             // btnDeleteAllFiles
@@ -128,11 +136,11 @@
             // tbLog
             // 
             tbLog.Dock = DockStyle.Fill;
-            tbLog.Location = new Point(0, 90);
+            tbLog.Location = new Point(0, 150);
             tbLog.Multiline = true;
             tbLog.Name = "tbLog";
             tbLog.ScrollBars = ScrollBars.Both;
-            tbLog.Size = new Size(800, 314);
+            tbLog.Size = new Size(800, 254);
             tbLog.TabIndex = 6;
             // 
             // panel3
@@ -164,12 +172,72 @@
             label3.TabIndex = 4;
             label3.Text = "Base Url:";
             // 
+            // panel4
+            // 
+            panel4.Controls.Add(tbKnowledgeName);
+            panel4.Controls.Add(label4);
+            panel4.Dock = DockStyle.Top;
+            panel4.Location = new Point(0, 90);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(800, 30);
+            panel4.TabIndex = 8;
+            // 
+            // tbKnowledgeName
+            // 
+            tbKnowledgeName.Dock = DockStyle.Top;
+            tbKnowledgeName.Location = new Point(102, 0);
+            tbKnowledgeName.Name = "tbKnowledgeName";
+            tbKnowledgeName.Size = new Size(698, 23);
+            tbKnowledgeName.TabIndex = 5;
+            tbKnowledgeName.Leave += tbApiKey_Leave;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Dock = DockStyle.Left;
+            label4.Location = new Point(0, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(102, 15);
+            label4.TabIndex = 4;
+            label4.Text = "Knowledge name:";
+            // 
+            // panel5
+            // 
+            panel5.Controls.Add(tbKnowledgeDescription);
+            panel5.Controls.Add(label5);
+            panel5.Dock = DockStyle.Top;
+            panel5.Location = new Point(0, 120);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(800, 30);
+            panel5.TabIndex = 9;
+            // 
+            // tbKnowledgeDescription
+            // 
+            tbKnowledgeDescription.Dock = DockStyle.Top;
+            tbKnowledgeDescription.Location = new Point(131, 0);
+            tbKnowledgeDescription.Name = "tbKnowledgeDescription";
+            tbKnowledgeDescription.Size = new Size(669, 23);
+            tbKnowledgeDescription.TabIndex = 5;
+            tbKnowledgeDescription.Leave += tbApiKey_Leave;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Dock = DockStyle.Left;
+            label5.Location = new Point(0, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(131, 15);
+            label5.TabIndex = 4;
+            label5.Text = "Knowledge description:";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(tbLog);
+            Controls.Add(panel5);
+            Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -183,6 +251,10 @@
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -201,5 +273,11 @@
         private Panel panel3;
         private TextBox tbBaseUrl;
         private Label label3;
+        private Panel panel4;
+        private TextBox tbKnowledgeName;
+        private Label label4;
+        private Panel panel5;
+        private TextBox tbKnowledgeDescription;
+        private Label label5;
     }
 }

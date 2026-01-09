@@ -82,7 +82,7 @@ public static class CommonMethodsForOpenWebUiApi
         var listOfAddedFiles = new List<string>();
         foreach (var file in files)
         {
-            if (!CheckIfSameFileAlreadyAdded(listOfAddedFiles, file)) continue;
+            if (CheckIfSameFileAlreadyAdded(listOfAddedFiles, file)) continue;
 
             try
             {
